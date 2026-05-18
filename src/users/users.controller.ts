@@ -1,4 +1,5 @@
-import { Controller, Get, Param, Post, Body, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Delete, Put, NotFoundException, UnprocessableEntityException, ForbiddenException } from '@nestjs/common';
+import { CreateUserDto, UpdateUserDto } from './users.dto';
 
 interface User {
   id: string;
@@ -36,28 +37,43 @@ export class UsersController {
   getUserById(@Param('id') id: string) {
     const user = this.users.find((user) => user.id === id);
     if (!user) {
-      return {
-        error: 'User not found',
-        statusCode: 404,
-      };
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    if (user.id === '1') {
+      throw new ForbiddenException('Access to this user is forbidden');
     }
     return user;
   }
 
   @Post()
-  createUser(@Body() newUser: User) {
-    this.users.push(newUser);
-    return newUser;
+  createUser(@Body() newUser: CreateUserDto) {
+    const user = {
+      ...newUser,
+      id: `${this.users.length + 1}`,
+    };
+    this.users.push(user);
+    return user;
+  }
+
+  @Put(':id')
+  updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+    const index = this.users.findIndex((user) => user.id === id);
+    if (index === -1) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    const updateUserData = {
+      ...this.users[index],
+      ...body,
+    };
+    this.users[index] = updateUserData;
+    return updateUserData;
   }
 
   @Delete(':id')
   deleteUser(@Param('id') id: string) {
     const index = this.users.findIndex((user) => user.id === id);
     if (index === -1) {
-      return {
-        error: 'User not found',
-        statusCode: 404,
-      };
+      throw new NotFoundException(`User with id ${id} not found`);
     }
     const deletedUser = this.users.splice(index, 1);
     return deletedUser[0];
