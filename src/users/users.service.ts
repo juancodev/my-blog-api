@@ -62,6 +62,7 @@ export class UsersService {
     return deletedUser[0];
   }
 
+  // Los métodos privados siempre van al final
   private findOne(id: string) {
     const position = this.users.findIndex((user) => user.id === id);
     if (position === -1) {
