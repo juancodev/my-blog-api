@@ -1,7 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { UsersService } from './users/users.service';
-import { User } from './users/user.model';
 
 @Controller()
 export class AppController {
@@ -11,7 +10,7 @@ export class AppController {
   ) {}
 
   @Get()
-  getHello(): User[] {
+  getHello() {
     return this.usersService.findAllUsers();
   }
 

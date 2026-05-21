@@ -1,73 +1,64 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { User } from './user.model';
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from './users.dto';
+import { User } from './entities/user.entity';
 
 // El decorador @Injectable() marca esta clase como un proveedor que puede ser inyectado en otros componentes de NestJS, como controladores o servicios. Esto permite que NestJS gestione la creación y el ciclo de vida de esta clase, facilitando la inyección de dependencias y promoviendo una arquitectura modular y escalable.
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [
-    {
-      id: '1',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-    },
-    {
-      id: '2',
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-    },
-    {
-      id: '3',
-      name: 'Alice Johnson',
-      email: 'alice.johnson@example.com',
-    },
-  ];
+  constructor(@InjectRepository(User) private readonly usersRepository: Repository<User>) {}
 
-  findAllUsers() {
-    return this.users;
+  async findAllUsers() {
+    const users = await this.usersRepository.find({ relations: { profile: true } });
+    return users;
   }
 
-  findUserById(id: string) {
-    const position = this.findOne(id);
-    const user = this.users[position];
-    if (user.id === '1') {
+  async findUserById(id: number) {
+    const user = await this.findOne(id);
+    if (user.id === 1) {
       throw new ForbiddenException('Access to this user is forbidden');
     }
     return user;
   }
 
-  create(newUser: CreateUserDto) {
-    const user = {
-      ...newUser,
-      id: `${this.users.length + 1}`,
-    };
-    this.users.push(user);
-    return user;
+  async findUserWithProfile(id: number) {
+    const user = await this.findOne(id);
+    const userProfile = await this.usersRepository.find({ where: { id: user.id }, relations: { profile: true } });
+    if (user.id === 1) {
+      throw new ForbiddenException('Access to this user is forbidden');
+    }
+    return userProfile;
   }
 
-  updateUser(id: string, body: UpdateUserDto) {
-    const position = this.findOne(id);
-    const updateUserData = {
-      ...this.users[position],
-      ...body,
-    };
-    this.users[position] = updateUserData;
-    return updateUserData;
+  async create(newUser: CreateUserDto) {
+    try {
+      const user = await this.usersRepository.save(newUser);
+      return user;
+    } catch {
+      throw new BadRequestException('Wrong to the create user');
+    }
   }
 
-  deleteUser(id: string) {
-    const position = this.findOne(id);
-    const deletedUser = this.users.splice(position, 1);
-    return deletedUser[0];
+  async updateUser(id: number, body: UpdateUserDto) {
+    const user = await this.findOne(id);
+    const updatedUser = this.usersRepository.merge(user, body);
+    return await this.usersRepository.save(updatedUser);
+  }
+
+  async deleteUser(id: number) {
+    const user = await this.findOne(id);
+    await this.usersRepository.delete(user.id);
+    return { message: `User with id ${id} has been deleted` };
   }
 
   // Los métodos privados siempre van al final
-  private findOne(id: string) {
-    const position = this.users.findIndex((user) => user.id === id);
-    if (position === -1) {
+  private async findOne(id: number) {
+    const user = await this.usersRepository.findOneBy({ id });
+    if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
-    return position;
+    return user;
   }
 }

@@ -11,12 +11,12 @@ import { EnvConfig } from './env.model';
       useFactory: (configService: ConfigService<EnvConfig>) => ({
         type: 'postgres',
         host: configService.get('HOST'),
-        port: configService.get('PORT'),
+        port: Number(configService.get('DB_PORT') ?? 5432),
         username: configService.get('DB_USER'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         autoLoadEntities: true,
-        synchronize: true,
+        synchronize: true, // hace que se despliegue los datos de manera automática, no es recomendado para producción.
       }),
       inject: [ConfigService],
     }),

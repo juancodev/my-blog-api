@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Delete, Put, ParseIntPipe } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './users.dto';
 import { UsersService } from './users.service';
 
@@ -14,9 +14,16 @@ export class UsersController {
     return this.usersService.findAllUsers();
   }
 
+  // ParseIntPipe es un pipe de validación que se encarga de trasnformar el parámetro id de string a number.
+
   @Get(':id')
-  getUserById(@Param('id') id: string) {
+  getUserById(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findUserById(id);
+  }
+
+  @Get(':id/profile')
+  getUserProfile(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.findUserWithProfile(id);
   }
 
   @Post()
@@ -25,12 +32,12 @@ export class UsersController {
   }
 
   @Put(':id')
-  updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+  updateUser(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateUserDto) {
     return this.usersService.updateUser(id, body);
   }
 
   @Delete(':id')
-  deleteUser(@Param('id') id: string) {
+  deleteUser(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.deleteUser(id);
   }
 }
