@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
-import { Post } from './entities/post.entity';
+import { CreatePostDto } from '../dto/create-post.dto';
+import { UpdatePostDto } from '../dto/update-post.dto';
+import { Post } from '../entities/post.entity';
 
 @Injectable()
 export class PostService {
@@ -11,7 +11,10 @@ export class PostService {
 
   async create(createPostDto: CreatePostDto) {
     try {
-      const newPost = this.postRepository.create(createPostDto);
+      const newPost = this.postRepository.create({
+        ...createPostDto,
+        user: { id: createPostDto.userId },
+      });
       return await this.postRepository.save(newPost);
     } catch {
       throw new BadRequestException('Wrong to the create post');
@@ -19,11 +22,22 @@ export class PostService {
   }
 
   async findAll() {
-    return this.postRepository.find({ order: { createdAt: 'DESC' } });
+    return this.postRepository.find({
+      relations: { user: { profile: true } },
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async findOne(id: number) {
     return this.findPostById(id);
+  }
+
+  async findPostsByUser(userId: number) {
+    return this.postRepository.find({
+      where: { user: { id: userId } },
+      relations: { user: { profile: true } },
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
@@ -40,13 +54,15 @@ export class PostService {
   }
 
   async remove(id: number) {
-    const post = await this.findPostById(id);
-    await this.postRepository.delete(post.id);
+    await this.postRepository.delete(id);
     return { message: `Post with id ${id} has been deleted` };
   }
 
   private async findPostById(id: number) {
-    const post = await this.postRepository.findOneBy({ id });
+    const post = await this.postRepository.findOne({
+      where: { id },
+      relations: { user: { profile: true } },
+    });
     if (!post) {
       throw new NotFoundException(`Post with id ${id} not found`);
     }

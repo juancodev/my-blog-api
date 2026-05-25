@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { PostService } from './post.service';
-import { Post } from './entities/post.entity';
+import { Post } from '../entities/post.entity';
 
 describe('PostService', () => {
   let service: PostService;
