@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Post, Body, Delete, Put, ParseIntPipe } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './users.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/users.dto';
 import { UsersService } from './users.service';
 
 // Decorators son aquellos que nos permite controlar el acceso desde el endpoint, es decir, desde la ruta /users

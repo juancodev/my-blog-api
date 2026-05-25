@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { EnvConfig } from './env.model';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { EnvConfig } from './env.model';
       inject: [ConfigService],
     }),
     UsersModule,
+    PostModule,
   ],
 })
 export class AppModule {}
