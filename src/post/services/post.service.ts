@@ -14,6 +14,7 @@ export class PostService {
       const newPost = this.postRepository.create({
         ...createPostDto,
         user: { id: createPostDto.userId },
+        categories: createPostDto.categoryIds?.map((id) => ({ id })) || [], // [{id: 1}, {id: 2}, ...]
       });
       return await this.postRepository.save(newPost);
     } catch {
@@ -23,7 +24,7 @@ export class PostService {
 
   async findAll() {
     return this.postRepository.find({
-      relations: { user: { profile: true } },
+      relations: { user: { profile: true }, categories: true },
       order: { createdAt: 'DESC' },
     });
   }
@@ -35,7 +36,7 @@ export class PostService {
   async findPostsByUser(userId: number) {
     return this.postRepository.find({
       where: { user: { id: userId } },
-      relations: { user: { profile: true } },
+      relations: { user: { profile: true }, categories: true },
       order: { createdAt: 'DESC' },
     });
   }
@@ -61,7 +62,7 @@ export class PostService {
   private async findPostById(id: number) {
     const post = await this.postRepository.findOne({
       where: { id },
-      relations: { user: { profile: true } },
+      relations: { user: { profile: true }, categories: true },
     });
     if (!post) {
       throw new NotFoundException(`Post with id ${id} not found`);
