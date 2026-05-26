@@ -32,6 +32,18 @@ export class UsersService {
     return userProfile;
   }
 
+  async findUserPosts(userId: number) {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+      relations: { posts: true },
+      order: { createdAt: 'DESC' },
+    });
+    if (!user) {
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
+    return user.posts;
+  }
+
   async create(newUser: CreateUserDto) {
     try {
       const user = await this.usersRepository.save(newUser);

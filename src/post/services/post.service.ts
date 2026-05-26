@@ -70,4 +70,13 @@ export class PostService {
 
     return post;
   }
+
+  async getPostsByCategoryId(categoryId: number) {
+    const posts = await this.postRepository.find({
+      where: { categories: { id: categoryId } },
+      relations: { user: { profile: true } },
+      order: { createdAt: 'DESC' },
+    });
+    return posts;
+  }
 }
