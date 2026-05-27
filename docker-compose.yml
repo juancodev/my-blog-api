@@ -1,5 +1,5 @@
 services:
-  postgres:
+  my-blog-api:
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: blog_user

@@ -96,3 +96,15 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Typeorm CLI:
+
+To run the TypeORM CLI, you can use the following command:
+
+```json
+  {
+    "typeorm": "typeorm-ts-node-commonjs -d ./src/database/ormconfig.ts", // ejecuta el CLI de TypeORM utilizando la configuración especificada en el archivo ormconfig.ts
+    "migrations:generate": "yarn typeorm migration:generate", // genera una nueva migración utilizando el CLI de TypeORM, el nombre de la migración se debe proporcionar después del comando
+    "migrations:show": "yarn typeorm migration:show" // muestra las migraciones que se han ejecutado y las que están pendientes utilizando el CLI de TypeORM
+  }
+```

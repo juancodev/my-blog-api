@@ -17,7 +17,7 @@ import { PostModule } from './post/post.module';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         autoLoadEntities: true,
-        synchronize: true, // hace que se despliegue los datos de manera automática, no es recomendado para producción.
+        synchronize: false, // hace que se despliegue los datos de manera automática, no es recomendado para producción.
       }),
       inject: [ConfigService],
     }),
