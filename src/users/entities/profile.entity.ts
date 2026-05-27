@@ -3,20 +3,20 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateCol
 @Entity({ name: 'profiles' })
 export class Profile {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ type: 'varchar', length: 30 })
-  name: string;
+  name!: string;
 
   @Column({ type: 'varchar', length: 30, name: 'last_name' })
-  lastName: string;
+  lastName!: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true }) // nullable permite ser opcional
-  avatar: string;
+  avatar?: string;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP', name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt?: Date;
 }

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany, BeforeInsert } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { Profile } from './profile.entity';
 import { Post } from '../../post/entities/post.entity';
 
@@ -11,7 +12,7 @@ export class User {
   @Column({ type: 'varchar', length: 100, unique: true })
   email!: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, select: false }) // select: false excluye la propiedad password al hacer una consulta a la base de datos, es decir, al obtener un usuario, no se incluirá la contraseña.
   password!: string;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
@@ -26,4 +27,10 @@ export class User {
 
   @OneToMany(() => Post, (post) => post.user)
   posts!: Post[];
+
+  // Antes de insertar un nuevo usuario, se encripta la contraseña utilizando bcrypt.
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
 }

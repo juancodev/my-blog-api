@@ -44,10 +44,11 @@ export class UsersService {
     return user.posts;
   }
 
-  async create(newUser: CreateUserDto) {
+  async create(body: CreateUserDto) {
     try {
-      const user = await this.usersRepository.save(newUser);
-      return user;
+      const user = this.usersRepository.create(body); // crea la estructura pero no lo guarda en la base de datos.
+      const userNew = await this.usersRepository.save(user);
+      return userNew;
     } catch {
       throw new BadRequestException('Wrong to the create user');
     }
