@@ -70,6 +70,11 @@ export class UsersService {
     return { message: `User with id ${id} has been deleted` };
   }
 
+  async getUserByEmail(email: string) {
+    const user = await this.usersRepository.findOne({ where: { email } });
+    return user;
+  }
+
   // Los métodos privados siempre van al final
   private async findOne(id: number) {
     const user = await this.usersRepository.findOneBy({ id });
