@@ -1,5 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany, BeforeInsert } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Exclude } from 'class-transformer';
+
 import { Profile } from './profile.entity';
 import { Post } from '../../post/entities/post.entity';
 
@@ -12,8 +14,8 @@ export class User {
   @Column({ type: 'varchar', length: 100, unique: true })
   email!: string;
 
-  @Column({ type: 'varchar', length: 50, select: false }) // select: false excluye la propiedad password al hacer una consulta a la base de datos, es decir, al obtener un usuario, no se incluirá la contraseña.
-  //@Exclude() // Excluye la propiedad password al serializar la entidad, es decir, al devolver un usuario en una respuesta HTTP, no se incluirá la contraseña.
+  @Column({ type: 'varchar', length: 50 }) // select: false excluye la propiedad password al hacer una consulta a la base de datos, es decir, al obtener un usuario, no se incluirá la contraseña.
+  @Exclude() // Excluye la propiedad password al serializar la entidad, es decir, al devolver un usuario en una respuesta HTTP, no se incluirá la contraseña.
   password!: string;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })

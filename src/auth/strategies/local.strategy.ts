@@ -1,7 +1,7 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from './../services/auth.service';
 
 @Injectable()
 // La clase LocalStrategy extiende PassportStrategy, lo que permite integrar la estrategia de autenticación local de Passport.js en la aplicación NestJS. Esto facilita la implementación de la autenticación basada en nombre de usuario y contraseña.
