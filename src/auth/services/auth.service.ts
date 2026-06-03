@@ -20,7 +20,6 @@ export class AuthService {
     // Aquí puedes agregar la lógica para validar la contraseña
     // Por ejemplo, usando bcrypt.compare(password, user.password)
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log(isMatch);
     if (!isMatch) {
       throw new UnauthorizedException('Unauthorized');
     }
