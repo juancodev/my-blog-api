@@ -13,7 +13,7 @@ export class Post {
   content?: string;
 
   @Column({ type: 'varchar', length: 800, nullable: true, name: 'cover_image' })
-  coverImage?: string;
+  coverImage?: string | string[];
 
   @Column({ type: 'varchar', length: 255, nullable: true, name: 'summary' })
   summary?: string;

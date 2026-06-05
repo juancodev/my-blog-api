@@ -12,7 +12,7 @@ export class CreatePostDto {
 
   @IsUrl()
   @IsOptional()
-  coverImage?: string;
+  coverImage?: string | string[];
 
   @IsString()
   @IsOptional()

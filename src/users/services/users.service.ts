@@ -17,9 +17,6 @@ export class UsersService {
 
   async findUserById(id: number) {
     const user = await this.findOne(id);
-    if (user.id === 1) {
-      throw new ForbiddenException('Access to this user is forbidden');
-    }
     return user;
   }
 
@@ -66,6 +63,7 @@ export class UsersService {
 
   async deleteUser(id: number) {
     const user = await this.findOne(id);
+    console.log(user);
     await this.usersRepository.delete(user.id);
     return { message: `User with id ${id} has been deleted` };
   }

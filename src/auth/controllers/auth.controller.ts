@@ -24,7 +24,7 @@ export class AuthController {
   }
 }
 
-/**
+/*
   (1).- Usamos el guard de autenticación local para proteger la ruta de login. Esto significa que solo los usuarios que proporcionen credenciales válidas podrán acceder a esta ruta.
   (2).- Aseguramos que req.user es del tipo User para acceder a sus propiedades sin errores de tipo.
   (3).- Generamos un token JWT para el usuario autenticado utilizando el método generateToken del AuthService.
