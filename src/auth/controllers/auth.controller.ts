@@ -13,13 +13,19 @@ import { User } from '../../users/entities/user.entity';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(AuthGuard('local')) // Usamos el guard de autenticación local para proteger la ruta de login. Esto significa que solo los usuarios que proporcionen credenciales válidas podrán acceder a esta ruta.
+  @UseGuards(AuthGuard('local')) // (1)
   @Post('login')
   login(@Req() req: Request) {
-    const user = req.user as User; // Aseguramos que req.user es del tipo User para acceder a sus propiedades sin errores de tipo.
+    const user = req.user as User; // (2)
     return {
       user,
-      access_token: this.authService.generateToken(user), // Generamos un token JWT para el usuario autenticado utilizando el método generateToken del AuthService.
+      access_token: this.authService.generateToken(user), // (3)
     };
   }
 }
+
+/**
+  (1).- Usamos el guard de autenticación local para proteger la ruta de login. Esto significa que solo los usuarios que proporcionen credenciales válidas podrán acceder a esta ruta.
+  (2).- Aseguramos que req.user es del tipo User para acceder a sus propiedades sin errores de tipo.
+  (3).- Generamos un token JWT para el usuario autenticado utilizando el método generateToken del AuthService.
+ */

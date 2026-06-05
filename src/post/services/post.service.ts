@@ -9,11 +9,11 @@ import { Post } from '../entities/post.entity';
 export class PostService {
   constructor(@InjectRepository(Post) private readonly postRepository: Repository<Post>) {}
 
-  async create(body: CreatePostDto) {
+  async create(body: CreatePostDto, userId: number) {
     try {
       const newPost = this.postRepository.create({
         ...body,
-        user: { id: body.userId },
+        user: { id: userId },
         categories: body.categoryIds?.map((id) => ({ id })) || [], // [{id: 1}, {id: 2}, ...]
       });
       return await this.postRepository.save(newPost);

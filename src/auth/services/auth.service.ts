@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import { UsersService } from '../../users/services/users.service';
 import { User } from '../../users/entities/user.entity';
+import { Payload } from '../models/payload.model';
 
 @Injectable()
 export class AuthService {
@@ -17,8 +18,7 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Unauthorized');
     }
-    // Aquí puedes agregar la lógica para validar la contraseña
-    // Por ejemplo, usando bcrypt.compare(password, user.password)
+    // (1)
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new UnauthorizedException('Unauthorized');
@@ -27,9 +27,13 @@ export class AuthService {
   }
 
   generateToken(user: User) {
-    const payload = { sub: user.id };
+    const payload: Payload = { sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
 }
+
+/*
+  (1) Aquí puedes agregar la lógica para validar la contraseña. Por ejemplo, usando bcrypt.compare(password, user.password)
+*/
