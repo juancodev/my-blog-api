@@ -108,3 +108,13 @@ To run the TypeORM CLI, you can use the following command:
     "migrations:show": "yarn typeorm migration:show" // muestra las migraciones que se han ejecutado y las que están pendientes utilizando el CLI de TypeORM
   }
 ```
+
+¿Cuáles son los pasos técnicos para construir y lanzar la API a producción?
+
+Antes de ejecutar el servidor en producción, la aplicación escrita en TypeScript debe ser transformada a JavaScript puro. Este proceso asegura compatibilidad y rendimiento.
+
+Corre el comando npm run build para transpilar todo el código TypeScript a JavaScript dentro de la carpeta /dist.
+Ejecuta las migraciones de base de datos tras el build, asegurando que cualquier cambio estructural pendiente sea aplicado.
+Finalmente, inicia el servidor Node.js en modo producción con el comando configurado, que suele apuntar a dist/main.js.
+Orden típico recomendado: 1. build, 2. migraciones, 3. start prod.
+Los scripts deben ser automatizados en el servidor para que se cumplan siempre que haya despliegue.
