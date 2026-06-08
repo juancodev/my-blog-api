@@ -40,7 +40,6 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'Create user' })
-  @UseGuards(AuthGuard('jwt'))
   @Post()
   createUser(@Body() newUser: CreateUserDto) {
     return this.usersService.create(newUser);
